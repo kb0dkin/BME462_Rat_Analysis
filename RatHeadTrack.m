@@ -15,6 +15,10 @@
 %       * Loading in RatMap based rat locations
 %       * 
 
+%Genaralized photo read from directory (create a folder 'video' that stores all
+%videos)
+files = dir('video/*.tif');
+
 
     % Prepare the new file.
     vidObj = VideoWriter('test.avi');
@@ -23,20 +27,25 @@
     % Create an animation.
     set(gca,'nextplot','replacechildren');
 
-for i = 1:140
+for i = 1:length(files)
 % Runs through all of the pictures for a specific view, converts them to
 % black and white, edge detection, then converts them all into a video.
     
-    if i>=1 && i <=9,
-        str = '_c001s000100000';
-    elseif i>=10 && i<= 99,
-        str = '_c001s00010000';
-    else
-        str = '_c001s0001000';
-    end
+%     if i>=1 && i <=9,
+%         str = '_c001s000100000';
+%     elseif i>=10 && i<= 99,
+%         str = '_c001s00010000';
+%     else
+%         str = '_c001s0001000';
+%     end
+%         
     
-    % Reads in the file   
-    I=imread([str,num2str(i),'.tif']);
+    %if the string name contains the second video set break from for loob
+    if ~isempty(strfind(files(i).name,'_c002')) 
+        break;
+    end
+    % Reads in the file
+    I=imread(files(i).name);
     
     
     level = graythresh(I);  % Calculates the gray threshold --KLB
