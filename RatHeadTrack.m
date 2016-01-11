@@ -68,6 +68,7 @@ function RatHeadTrack
             plot(x,y,'g')
         end
 
+        %find difference in image (needs improvement!!)
         D = imabsdiff(ED{i+1},ED{i});
         figure,imshow(D_BW)
 
@@ -77,10 +78,24 @@ function RatHeadTrack
 
         % Close the file.
         close(vidObj);
-        
+
+    BW1 = double(im2bw(I,level)); % BW1 = BW1 version of image (with lower grey level)
+    BW2 = double(im2bw(I,level^0.5)); % BW2 = BW2 version of imag (with higher gery level)
+    ED1 = edge(BW1,'Sobel'); % Edge detection 1
+    ED2 = edge(BW2,'Sobel'); % Edge detection 2
+    % imshow(ED);
+    imshowpair(ED1,ED2,'montage') % Personally I think the BW2 is more suitable for detection -- CG
+
+    frame = getframe;
+    writeVideo(vidObj,frame);
+end
+    
+    % Close the file.
+    close(vidObj);
 function ED = getEdges(I)
     level = graythresh(I);  % Calculates the gray threshold --KLB
     l = 0.975;
     BW = double(im2bw(I,level)); %BW = BW version of image
     ED = edge(BW,'Sobel'); %Edge detection
- return;
+return;
+
