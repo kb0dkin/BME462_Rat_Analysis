@@ -40,10 +40,10 @@ for i = 1:140
     
     
     level = graythresh(I);  % Calculates the gray threshold --KLB
-    BW1 = double(im2bw(I,level)); % BW = BW version of image
-    BW2 = double(im2bw(I,level^0.5)); % BW = BW version of image
-    ED1 = edge(BW1,'Sobel'); % Edge detection
-    ED2 = edge(BW2,'Sobel'); % Edge detection
+    BW1 = double(im2bw(I,level)); % BW1 = BW1 version of image (with lower grey level)
+    BW2 = double(im2bw(I,level^0.5)); % BW2 = BW2 version of imag (with higher gery level)
+    ED1 = edge(BW1,'Sobel'); % Edge detection 1
+    ED2 = edge(BW2,'Sobel'); % Edge detection 2
     % imshow(ED);
     imshowpair(ED1,ED2,'montage') % Personally I think the BW2 is more suitable for detection -- CG
 
