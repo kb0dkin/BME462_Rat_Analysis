@@ -29,7 +29,7 @@ function RatHeadTrack
         set(gca,'nextplot','replacechildren');
 
         count = 0;
-        ED = {};
+        ED_al = {};
 
     for i = 1:length(files)
     % Runs through all of the pictures for a specific view, converts them to
@@ -44,10 +44,9 @@ function RatHeadTrack
     %     end
     %         
 
-        %if the string name contains the second video set break from for
-        %loop -- UM
+        %if the string name contains the second video set break from for loob
         if ~isempty(strfind(files(i).name,'_c002')) 
-            count=count+1;
+            count = count+1
             break;
         end
         x = [];
@@ -56,20 +55,16 @@ function RatHeadTrack
         I=imread(files(i).name);
         I_next = imread(files(i+1).name);
         imshow(I)
-    
-        % store current and next image --UM
-        ED{i} = getEdges(I);
-        ED{i+1} = getEdges(I_next);
-    
-        %identify nose points --UM
-        if i==1
-            fig = figure; imshow(ED{1}); hold on 
-            [x_start,y_start] = getpts(fig); % hand track nose coordinates
-            plot(x,y,'g')
-        end
 
-        D = imabsdiff(ED{i+1},ED{i});
-        figure,imshow(D_BW)
+        ED{i} = getEdges(I);
+        ED{i+1} = 
+
+        fig = figure; imshow(ED{1}); hold on 
+        [x_start,y_start] = getpts(fig); % hand track nose coordinates
+        plot(x,y,'g')
+
+
+        %D = imabsdiff(
 
         frame = getframe;
         writeVideo(vidObj,frame);
@@ -77,10 +72,8 @@ function RatHeadTrack
 
         % Close the file.
         close(vidObj);
-        
 function ED = getEdges(I)
     level = graythresh(I);  % Calculates the gray threshold --KLB
-    l = 0.975;
     BW = double(im2bw(I,level)); %BW = BW version of image
     ED = edge(BW,'Sobel'); %Edge detection
  return;
