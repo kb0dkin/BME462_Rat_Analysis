@@ -40,9 +40,13 @@ for i = 1:140
     
     
     level = graythresh(I);  % Calculates the gray threshold --KLB
-    BW = double(im2bw(I,level)); %BW = BW version of image
-    ED = edge(BW,'Sobel'); %Edge detection
-    imshow(ED);
+    BW1 = double(im2bw(I,level)); % BW = BW version of image
+    BW2 = double(im2bw(I,level^0.5)); % BW = BW version of image
+    ED1 = edge(BW1,'Sobel'); % Edge detection
+    ED2 = edge(BW2,'Sobel'); % Edge detection
+    % imshow(ED);
+    imshowpair(ED1,ED2,'montage') % Personally I think the BW2 is more suitable for detection -- CG
+
     frame = getframe;
     writeVideo(vidObj,frame);
 end
