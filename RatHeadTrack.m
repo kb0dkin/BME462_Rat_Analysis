@@ -23,7 +23,7 @@ function RatHeadTrack()
 
 
         % Prepare the new file.
-        vidObj = VideoWriter('TestEdge.avi');
+        vidObj = VideoWriter('Test.avi');
         open(vidObj);
 
         % Create an animation.
@@ -31,6 +31,7 @@ function RatHeadTrack()
 
         count = 0;
         ED = {};
+        D = {};
 
     for i = 1:length(files)
     % Runs through all of the pictures for a specific view, converts them to
@@ -48,7 +49,7 @@ function RatHeadTrack()
         % Reads in the file - added folder KB
         I=imread(strcat('video/',files(i).name));
         I_next = imread(strcat('video/',files(i+1).name));
-        %imshow(I)
+%         imshow(I)
     
         % store current and next image --UM
         ED{i} = getEdges(I);
@@ -70,13 +71,14 @@ function RatHeadTrack()
     end
 
         % Close the file.
-        close(vidObj);
+    close(vidObj);
 
-
-      for i=1:length(ED)
-          
-      end
-      
+%     vidObj = VideoWriter('test_movement.avi');
+%     open(vidObj);
+%     for i=1:length(ED)
+%           
+%     end
+%     close(vidObj);
       
 %     BW1 = double(im2bw(I,level)); % BW1 = BW1 version of image (with lower grey level)
 %     BW2 = double(im2bw(I,level^0.5)); % BW2 = BW2 version of imag (with higher gery level)
