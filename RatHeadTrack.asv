@@ -23,7 +23,7 @@ function RatHeadTrack()
 
 
         % Prepare the new file.
-        vidObj = VideoWriter('TestEdge.avi');
+        vidObj = VideoWriter('testa.avi');
         open(vidObj);
 
         % Create an animation.
@@ -45,7 +45,7 @@ function RatHeadTrack()
         end
         x = [];
         y = [];
-        % Reads in the file - added folder KB
+        % Reads in the file - 
         I=imread(strcat('video/',files(i).name));
         I_next = imread(strcat('video/',files(i+1).name));
         %imshow(I)
@@ -63,7 +63,7 @@ function RatHeadTrack()
 
         %find difference in image (needs improvement!!)
         D = imabsdiff(ED{i+1},ED{i});
-%         figure; imshow(D)
+        figure; %imshow(D)
 
         frame = getframe;
         writeVideo(vidObj,frame);
@@ -72,12 +72,6 @@ function RatHeadTrack()
         % Close the file.
         close(vidObj);
 
-
-      for i=1:length(ED)
-          
-      end
-      
-      
 %     BW1 = double(im2bw(I,level)); % BW1 = BW1 version of image (with lower grey level)
 %     BW2 = double(im2bw(I,level^0.5)); % BW2 = BW2 version of imag (with higher gery level)
 %     ED1 = edge(BW1,'Sobel'); % Edge detection 1
@@ -88,6 +82,9 @@ function RatHeadTrack()
 %     frame = getframe;
 %     writeVideo(vidObj,frame);
 end
+    
+    % Close the file.
+%     close(vidObj);
 
 
     
