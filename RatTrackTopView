@@ -1,0 +1,40 @@
+% Originally written by Chengxi, modified by Rikki Irwin
+
+% Prepare the new file.
+vidObj = VideoWriter('test.avi');
+open(vidObj);
+ 
+% Create an animation.
+set(gca,'nextplot','replacechildren');   
+
+for i = 1:140
+    if i>=1 && i <=9,
+        str = '_c002s000100000';
+    elseif i>=10 && i<= 99,
+        str = '_c002s00010000';
+    else
+        str = '_c002s0001000';
+    end
+    
+    I=imread(['video\',str,num2str(i),'.tif']);
+    bw = edge(I,'canny',.8); % This seemed to work better for me
+    
+    % Find tip of nose = highest point in picture -- RI
+    [x y] = find(bw == 1);
+    tip_index = find(x == min(x));
+    
+    rgb = double(bw); % convert the picture to rgb
+    rgb(end, end, 3) = 0; % give the rgb image 3 channels and set other 2 to be the same as 1
+    rgb(:,:,2) = rgb(:,:,1);
+    rgb(:,:,3) = rgb(:,:,1);
+    
+    % For the tip pixel indeces, set the 2nd and 3rd channel to zero,
+    % leaving only red
+    rgb(x(tip_index),y(tip_index),2) = 0;
+    rgb(x(tip_index),y(tip_index),3) = 0;
+    
+    writeVideo(vidObj,rgb);
+end
+
+% Close the file.
+close(vidObj);
