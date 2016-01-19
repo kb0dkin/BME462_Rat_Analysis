@@ -115,7 +115,7 @@ function RatHeadTrack_nose
         nose_head=[nose;head]; L=pdist(nose_head,'euclidean');
         h_to_n_2=nose-head;
         
-        r=vrrotvec(h_to_n_1,h_to_n_2);
+        %r=vrrotvec(h_to_n_1,h_to_n_2);
         
         %Display nose and head points on image
         figure(3); imshow(ED,[0,1]), hold on;
