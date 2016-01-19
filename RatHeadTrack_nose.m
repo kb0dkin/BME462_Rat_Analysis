@@ -20,17 +20,17 @@ function RatHeadTrack_nose
     %videos)
     path = [pwd '/video/*.tif'];
     files = dir(path);
+    neighborhood=10;
 
+    % Prepare the new file.
+    vidObj = VideoWriter('test.avi');
+    open(vidObj);
 
-        % Prepare the new file.
-        vidObj = VideoWriter('test.avi');
-        open(vidObj);
+    % Create an animation.
+    set(gca,'nextplot','replacechildren');
 
-        % Create an animation.
-        set(gca,'nextplot','replacechildren');
-
-        nose_coord = [];
-        head_coord = [];
+    nose_coord = [];
+    head_coord = [];
 
     for i = 1:length(files)
     % Runs through all of the pictures for a specific view, converts them to
@@ -39,7 +39,6 @@ function RatHeadTrack_nose
         %if the string name contains the second video set break from for
         %loop -- UM
         if ~isempty(strfind(files(i).name,'_c002')) 
-            count=count+1;
             break;
         end
 
@@ -66,9 +65,12 @@ function RatHeadTrack_nose
              %not essential to the given data set
              x_nose = axes2pix(ncols,xdata,x_start(1)); y_nose = axes2pix(nrows,ydata,y_start(1));
              x_head = axes2pix(ncols,xdata,x_start(2)); y_head=axes2pix(nrows,ydata,y_start(2));
-             nose=[x_nose y_nose]; head=[x_head,y_head];
+             nose=[x_nose y_nose]; head=[x_head,y_head]; nose_head=[nose;head];
              nose_coord = [nose_coord;nose]; head_coord=[head_coord;head];
+             L = pdist(nose_head,'euclidean');
          end
+         
+         h_to_n_1=nose-head;
 
         %find the edges in the next image
         D_ED=getEdges(I_next);
@@ -78,7 +80,7 @@ function RatHeadTrack_nose
         %find the distance between the nose point to the edges of the next
         %image.
         for k=1:size(E,1)
-            N=[nose;E(k,:)]; H=[head;E(k,:)];
+            N=[nose;E(k,:)]; H=[head;E(k,:)]; 
             d_nose(k)=pdist(N,'euclidean');
             d_head(k)=pdist(H,'euclidean');
         end
@@ -94,14 +96,30 @@ function RatHeadTrack_nose
             % * possibly using the initial distance between the head point and the nose point
         
         [~,ind_nose]=min(d_nose); [~,ind_head]=min(d_head);
-        x_nose = E(ind_nose,1); y_nose = E(ind_nose,2);
-        nose=[x_nose y_nose]; nose_coord =[nose_coord;nose];
-        x_head = E(ind_head,1); y_head=E(ind_head,2);
-        head=[x_head y_head]; head_coord=[head_coord;head];
+        
+        idx_n=ind_nose-neighborhood:ind_nose+neighborhood;
+        idx_h=ind_head-neighborhood:ind_head+neighborhood;
+        c=1;
+        for j=1:length(idx_h)
+            temp_h=[E(idx_h(j),1) E(idx_h(j),2)];
+            for l=1:length(idx_n)
+                temp_n=[E(idx_n(l),1) E(idx_n(l),2)];
+                NH = [temp_h;temp_n];
+                d(l,j)= pdist(NH,'euclidean');
+            end
+        end
+            
+        dum=abs(d-L); [M,rows]=min(dum);[~,min_col]=min(M); min_row=rows(min_col);
+        nose=[E(idx_n(min_row),1) E(idx_n(min_row),2)]; nose_coord =[nose_coord;nose];
+        head=[E(idx_h(min_col),1) E(idx_h(min_col),2)]; head_coord=[head_coord;head];
+        nose_head=[nose;head]; L=pdist(nose_head,'euclidean');
+        h_to_n_2=nose-head;
+        
+        r=vrrotvec(h_to_n_1,h_to_n_2);
         
         %Display nose and head points on image
         figure(3); imshow(ED,[0,1]), hold on;
-        plot(nose_coord(i,1), nose_coord(i,2),'r*',...
+        plot(nose_coord(i,1), nose_coord(i,2),'r*',... 
             head_coord(i,1),head_coord(i,2),'go');
         hold off
 
